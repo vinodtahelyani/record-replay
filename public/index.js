@@ -75,7 +75,7 @@ const debouncedKeydownHandler = debounce(() => {
         send({type: 'type', text: keysPressed.join('')});
         keysPressed = [];
     }
-}, 500);
+}, 1000);
 const onKeyDown = (event) => {
     const key = event.key;
     if (ignore.includes(key)) return;

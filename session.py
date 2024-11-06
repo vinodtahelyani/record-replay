@@ -179,7 +179,7 @@ class AppiumSessionHandler:
                     center_x, center_y = self._get_center(parsed_bounds)
                     current_distance = self._distance(x, y, center_x, center_y)
 
-                    if current_distance < closest_distance:
+                    if current_distance <= closest_distance:
                         closest_distance = current_distance
                         closest_element = elem
 
