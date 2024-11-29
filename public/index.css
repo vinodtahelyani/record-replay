@@ -17,7 +17,6 @@ body, html {
 .container2 {
     width: 100%;
     padding: 30px;
-    display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
@@ -55,7 +54,6 @@ iframe {
     width: auto;
     height: 80%;
     border: none;
-    display: none;
 }
 
 .previous {
@@ -79,13 +77,13 @@ iframe {
     color: #b9ffea;
     background-color: #385e5e;
     padding: 20px;
-    display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
     box-sizing: border-box;
     line-height: 2;
     font-family: monospace;
+    height: 100vh;
 }
 
 .grid-container {
@@ -116,3 +114,16 @@ iframe {
 .circular-btn:hover {
     background-color: #45a049; /* Button hover color */
 }
+
+       
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+            max-width: 400px;
+        }

@@ -3,6 +3,7 @@ import math
 import string
 from itertools import product
 from lxml import etree as ET
+from storage import save_temp_data, save_to_jsonl
 
 from appium import webdriver
 from android import AndroidDeviceHandler
@@ -19,7 +20,8 @@ class AppiumSessionHandler:
         self.device_handler._run_adb_command("forward --remove-all")
 
     def start_session(self):
-        hub_url = f"http://localhost:4723/wd/hub"
+        print("creating android session")
+        hub_url = "https://vinodtahelyani:sPEMORyU2Tlx9OytMHacgo9UNEwVExq6d4EWcQxefhkMcAOFXc@mobile-hub.lambdatest.com/wd/hub"
         options = UiAutomator2Options()
         options.device_name = "device"
         options.platform_name = "Android"
@@ -28,7 +30,26 @@ class AppiumSessionHandler:
         options.use_json_source = True
         options.system_port = 8200
         options.auto_grant_permissions = True
-        options.auto_accept_alerts = True    
+        options.auto_accept_alerts = True 
+
+        options.new_command_timeout = 86400
+        options.use_json_source = True
+        options.system_port = 8201
+        options.auto_grant_permissions = True
+        options.auto_accept_alerts = True 
+        lt_options = {}
+        lt_options["name"] = 'data record'
+        lt_options["platformName"] = 'android'
+        lt_options["allowInvisibleElements"] = True
+        lt_options["deviceName"] = '^(?!.*(Tab|Fold|Xiaomi|Redmi|Oppo|Moto|OnePlus|Vivo|Huawei)).*'
+        lt_options["w3c"] = True
+        lt_options["isRealMobile"] = True
+        lt_options["app"] = "lt://APP10160522181732791624601544"
+        lt_options["region"] = 'ap'
+        lt_options["platformVersion"] = '12'
+        lt_options["idleTimeout"]=  600
+        lt_options["visual"] = True
+        options.set_capability("LT:Options", lt_options)  
         self.driver = webdriver.Remote(command_executor=hub_url, options=options)
         self.driver.update_settings({"allowInvisibleElements": True})
         self.driver.implicitly_wait(10)
@@ -72,14 +93,38 @@ class AppiumSessionHandler:
     def get_base_code(self):
         return """from appium import webdriver\nfrom appium.options.android import UiAutomator2Options\nfrom appium.webdriver.common.appiumby import By\n\noptions = UiAutomator2Options()\noptions.device_name = 'device'\noptions.platform_name = 'Android'\noptions.automation_name = 'UiAutomator2'\noptions.new_command_timeout = 86400\noptions.use_json_source = True\noptions.system_port = 8200\noptions.auto_grant_permissions = True\noptions.auto_accept_alerts = True\ndriver = webdriver.Remote(command_executor='http://localhost:4723/wd/hub', options=options)\ndriver.update_settings({'allowInvisibleElements': true})\ndriver.implicitly_wait(10)\n"""
     
-    def click(self, x: int, y: int):
+    def click(self, x: int, y: int, prompt: str):
         code = ''
+        print("clicking", x, y)
         element = self._find_closest_element(x, y)
+        data = {}
         if element is not None:
             xpath = element.get('xpath')
+            bounds = element.get('bounds')
+            data = {
+                "xpath": xpath,
+                "screenshot": self.driver.get_screenshot_as_base64(),
+                "xml": self.driver.page_source,
+                "x": x,
+                "y": y,
+                "prompt": prompt,
+                "bounds": bounds
+            }
+            
             code = f"element = driver.find_element(By.XPATH, \"{xpath}\")\nelement.click();"
+        print("tappiping")
         self.driver.tap([(x, y)], 100)
+        save_to_jsonl(f"data-{self.driver.session_id}.jsonl", data)
         return code
+    
+    def handle_assert(self, prompt: str, assert_result: bool):
+        data = {
+                "screenshot": self.driver.get_screenshot_as_base64(),
+                "xml": self.driver.page_source,
+                "prompt": prompt,
+                "assert_result": assert_result
+            }
+        save_to_jsonl(f"data-{self.driver.session_id}.jsonl", data)
     
     def type(self, text: str):
         enter = text.endswith("|enter")
@@ -191,7 +236,8 @@ class AppiumSessionHandler:
                 'hint': closest_element.get('hint'), 
                 'content-desc': closest_element.get('content-desc'),
                 'resource-id': closest_element.get('resource-id'),
-                'xpath': self.get_xpath(root, closest_element.get('tagId'))
+                'xpath': self.get_xpath(root, closest_element.get('tagId')),
+                'bounds': closest_element.get('bounds')
             }
         else:
             return None

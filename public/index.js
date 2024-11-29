@@ -2,7 +2,7 @@ const canvas = document.getElementById('canvas');
 const wrapper = document.getElementById('wrapper');
 const codeBlock = document.getElementById('code');
 const iframe = document.getElementsByTagName('iframe')[0];
-const socket = new WebSocket('ws://localhost:5000/ws');
+const socket = new WebSocket('wss://dev-auteur.lambdatest.com:5000/ws');
 
 let iframeRect = iframe.getBoundingClientRect();
 let canvasRect = canvas.getBoundingClientRect();
@@ -38,7 +38,8 @@ const socketMessage = (event) => {
             ratio = height / iframeRect.height;
             iframe.style.width = Math.ceil((width / ratio)) + 'px';
             
-            canvas.style.position = 'absolute';
+            setTimeout(() => {
+                canvas.style.position = 'absolute';
             canvas.style.top = `${iframeRect.top}px`;
             canvas.style.width = Math.ceil((width / ratio)) + 'px';
             canvas.style.height = `${iframeRect.height}px`;
@@ -49,6 +50,7 @@ const socketMessage = (event) => {
             wrapper.style.height = `${iframeRect.height}px`;
 
             canvasRect = canvas.getBoundingClientRect();
+            }, 3000)
         } else if (info.type === 'code') {
             showCode(info.code);
         }
@@ -118,7 +120,8 @@ const onWheel = (event) => {
 const clickElement = (event) => {
     lastPosition.x = event.clientX - canvasRect.left;
     lastPosition.y = event.clientY - canvasRect.top;
-    send({ type: 'click', x: Math.ceil(lastPosition.x * ratio), y: Math.ceil(lastPosition.y * ratio) });
+    console.log(Math.ceil(lastPosition.x * ratio), Math.ceil(lastPosition.y * ratio));
+    send({ type: 'click', x: Math.floor(lastPosition.x * ratio), y: Math.floor(lastPosition.y * ratio) });
 }
 const contextMenu = (event) => {
     lastPosition.x = event.clientX - canvasRect.left;
@@ -179,7 +182,25 @@ const handleOptions = (type) => {
             break;
     }
 }
+
+function handle_assert() {
+    data = {"type": "assert"}
+    send(data);
+}
+
+
+document.getElementById("handle_assert").addEventListener("click", handle_assert);
+
 const send = (data) => {
+    var assert_result = document.getElementById('assert-result').value;
+    if (assert_result) {
+        assert_result = false
+    } else {
+        assert_result = true
+    }
+    data = {"prompt": document.getElementById('prompt').value ,  "assert_result": assert_result      , ...data};
+    console.log("data", data);
+    
     const message = JSON.stringify(data);
     socket.send(message);
 }

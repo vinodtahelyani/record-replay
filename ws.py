@@ -3,14 +3,16 @@ from fastapi import WebSocket
 from android import AndroidDeviceHandler
 from session import AppiumSessionHandler
 
+appium_handler = AppiumSessionHandler()
+appium_handler.start_session()
+
 class WebSocketHandler:
     def __init__(self, websocket: WebSocket):
         self.websocket = websocket
         self.device_handler = AndroidDeviceHandler()
-        self.appium_handler = AppiumSessionHandler()
+        self.appium_handler = appium_handler
 
     async def connect(self):
-        self.appium_handler.start_session()
         await self.websocket.accept()
 
     async def disconnect(self):
@@ -54,9 +56,12 @@ class WebSocketHandler:
         elif type == 'notification':
             info['code'] = await self.handle_notification()
         elif type == 'click':
-            info['code'] = self.appium_handler.click(json_message['x'], json_message['y'])
+            info['code'] = self.appium_handler.click(x=json_message['x'], y=json_message['y'], prompt=json_message['prompt'])
         elif type == 'type':
             info['code'] = self.appium_handler.type(json_message['text'])
+        elif type == 'assert':
+            print("assert", json_message)
+            self.appium_handler.handle_assert(prompt=json_message['prompt'], assert_result=json_message['assert_result'])
         else:
             return None
         

@@ -7,24 +7,36 @@
     <link rel="stylesheet" href="/public/index.css">
 </head>
 <body>
-    <div id="leftDiv" class="container1">
-        <iframe src="http://localhost:2800/?udid=14091JEC203000&isByodTest=true&testid=asd&scrcpyV2=true"></iframe>
-        <canvas id="canvas"></canvas>
-        <div id="wrapper">
-            <div class="grid-container">
-                <div class="grid-item"><button class="circular-btn" onclick="handleOptions('clear')">Clear</button></div>
-                <div class="grid-item"><button class="circular-btn" onclick="handleOptions('hide')">Hide Keyboard</button></div>
-                <div class="grid-item"><button class="circular-btn" onclick="handleOptions('lock')">Lock</button></div>
-                <div class="grid-item"><button class="circular-btn" onclick="handleOptions('unlock')">Unlock</button></div>
-                <div class="grid-item"><button class="circular-btn" onclick="handleOptions('background')">Background App</button></div>
-                <div class="grid-item"><button class="circular-btn" onclick="handleOptions('notification')">Open Notifications</button></div>
+    <!-- <div> -->
+        <!-- <label for="prompt">Prompt:</label>
+        <input type="text" id="prompt" name="prompt" required> -->
+        <div id="leftDiv" class="container1"> 
+            <iframe src="https://device.lambdatest.com/?testid=APPTESMDtfQq27uGCCuDFK&proxy=true&q=appautomation.lambdatest.com"></iframe>
+            <canvas id="canvas"></canvas>
+            <div id="wrapper">
+                <div class="grid-container">
+                    <div class="grid-item"><button class="circular-btn" onclick="handleOptions('clear')">Clear</button></div>
+                    <div class="grid-item"><button class="circular-btn" onclick="handleOptions('hide')">Hide Keyboard</button></div>
+                    <div class="grid-item"><button class="circular-btn" onclick="handleOptions('lock')">Lock</button></div>
+                    <div class="grid-item"><button class="circular-btn" onclick="handleOptions('unlock')">Unlock</button></div>
+                    <div class="grid-item"><button class="circular-btn" onclick="handleOptions('background')">Background App</button></div>
+                    <div class="grid-item"><button class="circular-btn" onclick="handleOptions('notification')">Open Notifications</button></div>
+                </div>
             </div>
         </div>
-    </div>
-    
+        
+    <!-- </div> -->
+
     <div id="rightDiv" class="container2">
+        <label for="prompt">Prompt:</label>
+        <input type="text" id="prompt" name="prompt" required>
+        <label for="assert-result">False Assert:</label>
+        <input type="checkbox" id="assert-result" value="False" width="30px">
+        <button class="circular-btn" id="handle_assert">Assert</button>
         <textarea id="code"></textarea>
     </div>
+    
+    
     <label id="back" class="previous" onclick="goBack()">&#8249;</label>
     <script src="/public/index.js"></script>
 </body>

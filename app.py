@@ -25,4 +25,6 @@ async def websocket_endpoint(websocket: WebSocket):
     await handler.disconnect()
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=5000)
+    uvicorn.run(app, host="127.0.0.1", port=5000,
+                ssl_certfile="./lambdatestinternal.com.pem",
+                ssl_keyfile="./lambdatestinternal.com-key.pem")
