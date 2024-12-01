@@ -13,11 +13,11 @@ from appium.webdriver.common.appiumby import By
 class AppiumSessionHandler:
     def __init__(self):
         self.driver = None
-        self.device_handler = AndroidDeviceHandler()
-        self.device_handler.clear_app_data("io.appium.settings")
-        self.device_handler.clear_app_data("io.appium.uiautomator2.server")
-        self.device_handler.clear_app_data("io.appium.uiautomator2.server.test")
-        self.device_handler._run_adb_command("forward --remove-all")
+        # self.device_handler = AndroidDeviceHandler()
+        # self.device_handler.clear_app_data("io.appium.settings")
+        # self.device_handler.clear_app_data("io.appium.uiautomator2.server")
+        # self.device_handler.clear_app_data("io.appium.uiautomator2.server.test")
+        # self.device_handler._run_adb_command("forward --remove-all")
 
     def start_session(self):
         print("creating android session")

@@ -118,11 +118,13 @@ const onWheel = (event) => {
     event.preventDefault();
 }
 const clickElement = (event) => {
+    console.log('clicking ... ');
     lastPosition.x = event.clientX - canvasRect.left;
     lastPosition.y = event.clientY - canvasRect.top;
     console.log(Math.ceil(lastPosition.x * ratio), Math.ceil(lastPosition.y * ratio));
     send({ type: 'click', x: Math.floor(lastPosition.x * ratio), y: Math.floor(lastPosition.y * ratio) });
 }
+
 const contextMenu = (event) => {
     lastPosition.x = event.clientX - canvasRect.left;
     lastPosition.y = event.clientY - canvasRect.top;
@@ -136,6 +138,8 @@ socket.addEventListener('error', socketError);
 socket.addEventListener('message', socketMessage);
 
 canvas.addEventListener('click', clickElement);
+console.log('canvas adding click listener');
+
 canvas.addEventListener('wheel', onWheel);
 canvas.addEventListener('contextmenu', contextMenu);
 

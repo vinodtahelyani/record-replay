@@ -9,7 +9,7 @@ appium_handler.start_session()
 class WebSocketHandler:
     def __init__(self, websocket: WebSocket):
         self.websocket = websocket
-        self.device_handler = AndroidDeviceHandler()
+        # self.device_handler = AndroidDeviceHandler()
         self.appium_handler = appium_handler
 
     async def connect(self):
@@ -36,6 +36,7 @@ class WebSocketHandler:
 
     async def handle_message(self, message: str):
         json_message = json.loads(message)
+        print("json ... ", json_message)
         type = json_message['type']
         info = dict(type='code', code='')
         if type == 'resolution':
@@ -68,9 +69,9 @@ class WebSocketHandler:
         await self.send_message(info)
 
     async def handle_resolution(self):
-        resolution = self.device_handler.get_resolution()
+        # resolution = self.device_handler.get_resolution()
         await self.send_message({ 'type': 'code', 'code': self.appium_handler.get_base_code() })
-        return resolution
+        return "1080x2400"
 
     async def handle_back(self):
         return self.appium_handler.go_back()
