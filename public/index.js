@@ -196,13 +196,14 @@ function handle_assert() {
 document.getElementById("handle_assert").addEventListener("click", handle_assert);
 
 const send = (data) => {
-    var assert_result = document.getElementById('assert-result').value;
+    var assert_result = document.getElementById('assert-result').checked;
     if (assert_result) {
         assert_result = false
     } else {
         assert_result = true
     }
     data = {"prompt": document.getElementById('prompt').value ,  "assert_result": assert_result      , ...data};
+    document.getElementById('prompt').value = "";
     console.log("data", data);
     
     const message = JSON.stringify(data);
